@@ -1,5 +1,6 @@
 /***********************************************************************
  * Copyright (c) 2010 Bit Thicket Software
+ * Copyright (c) 2010 BadrIT (www.badrit.com)
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -46,13 +47,14 @@
         this.each(function() {
             var html = '<img src="' + config.imgPath + config.initialState + '.gif' + '"/>' +
                 '<input type="hidden" value="' + config.initialState + '" />';
-            $(this).html(html);
+            $(this).after(html);
+            $(this).hide();
 
             $(this).unbind('click');
-            $(this).click(function() {
-                var nextState = getNextState($('input', this).val());
-                $('img', this).attr('src', config.imgPath + nextState + '.gif');
-                $('input', this).val(nextState);
+            $(this).nextAll('img:first').click(function() {
+                main_checkbox = $(this).prevAll(':checkbox:first');
+                var nextState = getNextState(main_checkbox.nextAll('input:first').val());
+                main_checkbox.setState(nextState);
             });
             $('img', this).hover(function() {   /* in */
                 var src = $(this).attr('src').replace(/\.gif$/i, '_highlighted.gif');
@@ -62,8 +64,29 @@
                 $(this).attr('src', src);
             });
 
-            if (settings.after)
+            // Allows labels for this checkbox to update state
+            input_id = $(this).attr('id');
+            if (input_id) {
+              $(this).parents('form').find('label[for='+input_id+']').click(function() {
+                label_for = $(this).attr('for')
+                main_checkbox = $(this).parents('form').find(':checkbox[id='+label_for+']');
+                var nextState = getNextState(main_checkbox.nextAll('input:first').val());
+                main_checkbox.setState(nextState);
+              });
+            }
+
+            if (settings && settings.after)
                 settings.after(this);
         });
+        
+        $.fn.getState = function() {
+          return $(this).nextAll('input:first').val();
+        }
+
+        $.fn.setState = function(newState) {
+          var main_checkbox = $(this);
+          main_checkbox.nextAll('img:first').attr('src', config.imgPath + newState + '.gif');
+          main_checkbox.nextAll('input:first').val(newState);
+        }
     };
 })(jQuery);
