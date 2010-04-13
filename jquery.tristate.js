@@ -28,20 +28,34 @@
         var config = {
             initialState: 'intermediate',
             imgPath: 'images/',
+            auto_intermediate: true,
             after: null
         };
 
         if (settings) $.extend(config, settings);
 
-        var getNextState = function(state) {
-            switch (state) {
-            case 'intermediate':
-                return 'unchecked';
-            case 'unchecked':
-                return 'checked';
-            case 'checked':
-                return 'intermediate';
-            }
+        if (config.auto_intermediate) {
+          var getNextState = function(state) {
+              switch (state) {
+              case 'intermediate':
+                  return 'unchecked';
+              case 'unchecked':
+                  return 'checked';
+              case 'checked':
+                  return 'intermediate';
+              }
+          }
+        } else {
+          var getNextState = function(state) {
+              switch (state) {
+              case 'intermediate':
+                  return 'unchecked';
+              case 'unchecked':
+                  return 'checked';
+              case 'checked':
+                  return 'unchecked';
+              }
+          }
         }
 
         this.each(function() {
