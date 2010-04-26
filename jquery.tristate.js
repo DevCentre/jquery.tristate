@@ -65,11 +65,12 @@
             $(this).hide();
 
             $(this).unbind('click');
-            $(this).nextAll('img:first').click(function() {
-                main_checkbox = $(this).prevAll(':checkbox:first');
-                var nextState = getNextState(main_checkbox.nextAll('input:first').val());
+            $(this).next('img').click(function() {
+                main_checkbox = $(this).prev(':checkbox');
+                var nextState = getNextState(main_checkbox.next().next().val());
                 main_checkbox.setState(nextState);
             });
+
             $('img', this).hover(function() {   /* in */
                 var src = $(this).attr('src').replace(/\.gif$/i, '_highlighted.gif');
                 $(this).attr('src', src);
@@ -79,13 +80,17 @@
             });
 
             // Allows labels for this checkbox to update state
-            input_id = $(this).attr('id');
+            var input_id = $(this).attr('id');
             if (input_id) {
-              $(this).parents('form').find('label[for='+input_id+']').click(function() {
-                label_for = $(this).attr('for')
-                main_checkbox = $(this).parents('form').find(':checkbox[id='+label_for+']');
-                var nextState = getNextState(main_checkbox.nextAll('input:first').val());
-                main_checkbox.setState(nextState);
+              $(this).parents('form').find('label').each( function() {
+                if ($(this).attr("for") == input_id) {
+                  $(this).click(function() {
+                    var label_for = $(this).attr('for')
+                    var main_checkbox = $(this).parents('form').find(':checkbox#'+label_for);
+                    var nextState = getNextState(main_checkbox.next().next().val());
+                    main_checkbox.setState(nextState);
+                  });
+                }
               });
             }
 
@@ -94,13 +99,22 @@
         });
         
         $.fn.getState = function() {
-          return $(this).nextAll('input:first').val();
+          return $(this).next().next().val();
         }
 
         $.fn.setState = function(newState) {
           var main_checkbox = $(this);
-          main_checkbox.nextAll('img:first').attr('src', config.imgPath + newState + '.gif');
-          main_checkbox.nextAll('input:first').val(newState);
+          main_checkbox.next().attr('src', config.imgPath + newState + '.gif');
+          main_checkbox.next().next().val(newState);
+          $(this).trigger('stateChanged');
+        }
+        
+        $.fn.stateChanged = function(handler) {
+          if (handler == null) {
+            $(this).trigger('stateChanged');
+          } else {
+            $(this).bind('stateChanged', handler);
+          }
         }
     };
 })(jQuery);

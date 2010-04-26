@@ -1,0 +1,42 @@
+<html>
+  <head>
+    <script src="jquery-1.1.pack.js"></script>
+    <script src="jquery.tristate.js"/></script>
+    <script>
+
+      $(function() {
+        $('#accepted').tristate({auto_intermediate:false});
+        
+        $('#read').click( function() {
+          alert($('#accepted').getState());
+        });
+        $('#write').click( function() {
+          $('#accepted').setState("intermediate");
+        });
+        $('#fire').click( function() {
+          $('#accepted').stateChanged();
+        });
+        $('#accepted').stateChanged(function() {
+          alert('it is now: '+$(this).getState());
+        });
+      });
+    </script>
+  </head>
+  
+  <body>
+    <form>
+      <input type="checkbox" name="normal" id="normal"/>
+      <label for="normal">Normal</label>
+      <br/>
+
+      <input type="checkbox" name="accepted" id="accepted"/>
+      <label for="accepted">Accept</label>
+      <br/>
+
+      <input type="button" id="read" value="read"/><br/>
+      <input type="button" id="write" value="set intermediate"/><br/>
+      <input type="button" id="fire" value="fire state changed"/><br/>
+    </form>
+  </body>
+</html>
+
