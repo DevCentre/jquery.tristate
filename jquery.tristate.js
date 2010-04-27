@@ -28,13 +28,13 @@
         var config = {
             initialState: 'intermediate',
             imgPath: 'images/',
-            auto_intermediate: true,
+            autoIntermediate: true,
             after: null
         };
 
         if (settings) $.extend(config, settings);
 
-        if (config.auto_intermediate) {
+        if (config.autoIntermediate) {
           var getNextState = function(state) {
               switch (state) {
               case 'intermediate':

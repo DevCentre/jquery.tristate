@@ -1,6 +1,20 @@
-Overview
-========
+= Overview
 
+@aseldawy
+I added lots of feature to this plugin to make it usable.
+* Compatibility with FireFox and Chrome
+* A method to initialize the state programmatically
+* A method to retrieve state programmatically
+* Callbacks when state is changed
+* Compatibility with jquery 1.1 or later
+* Auto linking with labels that were already linked with the original checkbox
+
+I also added sample file for how to use it.
+In the original plugin, I had to dig into source code to know how to use it.
+
+Enjoy!
+
+@bcollins
 I needed a tri-state checkbox for a client's project and didn't find
 much on the web that I thought was suitable.  The one at
 http://shamsmi.blogspot.com/2008/12/tri-state-checkbox-using-javascript.html
@@ -10,3 +24,40 @@ concerned, jQuery *is* Javascript.
 
 I have shamelessly stolen the images in Shamsmi's package and wrote
 this simple plugin.
+
+= How to use
+Here's a simple example
+ <form>
+  <input type="checkbox" id="accept"/>
+  <label for="accept">Accept</label>
+ </form>
+ 
+ $('#accept').tristate();
+
+The above code will convert the checkbox inplace with a tristate.
+The user can now interact with it as if it was a checkbox.
+When the form is sent the value of the checkbox will be either "checked", "unchecked" or "intermediate".
+You can also determine its value from JavaScript using the call
+ $('#accept').getState();
+
+or set its current value using
+ $('#accept').setState("intermediate");
+
+You can also prepare a callback to be fired whenever the state changes
+ $('#accept').bind("stateChanged", function() {
+  alert("Hey! You changed the state");
+ });
+
+or in the jQuery way
+ $('#accept').stateChanged( function() {
+  alert("State is now " + $(this).getState());
+ }
+
+You can override the default images path in initialization
+ $('#accept').tristate({imgPath:"/images/tristate/"});
+
+Possible initialize options are
+initialState:      Either "checked", "unchecked" or "intermediate"
+imgPath:           A path where the images are located.
+autoIntermediate:  Allow the user to set the "intermediate" state
+after:             I don't know. Ask bcollins :)
