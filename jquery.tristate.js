@@ -59,8 +59,8 @@
         }
 
         this.each(function() {
-            var html = '<img src="' + config.imgPath + config.initialState + '.gif' + '"/>' +
-                '<input type="hidden" value="' + config.initialState + '" />';
+            var html = '<img src="' + config.imgPath + config.initialState + '.png' + '"/>' +
+                '<input type="hidden" value="' + config.initialState + '" name="'+$(this).name'"/>';
             $(this).after(html);
             $(this).hide();
 
@@ -71,8 +71,8 @@
                 main_checkbox.setState(nextState);
             });
 
-            $('img', this).hover(function() {   /* in */
-                var src = $(this).attr('src').replace(/\.gif$/i, '_highlighted.gif');
+            $(this).next().hover(function() {   /* in */
+                var src = $(this).attr('src').replace(/\.png$/i, '_highlighted.png');
                 $(this).attr('src', src);
             }, function() {                     /* out */
                 var src = $(this).attr('src').replace(/_highlighted/, '');
@@ -90,6 +90,20 @@
                     var nextState = getNextState(main_checkbox.next().next().val());
                     main_checkbox.setState(nextState);
                   });
+
+                  $(this).hover(function() {   /* in */
+                    var label_for = $(this).attr('for')
+                    var main_checkbox = $(this).parents('form').find(':checkbox#'+label_for);
+                    var img = main_checkbox.next();
+                    var newSrc = img.attr('src').replace(/\.png$/i, '_highlighted.png');
+                    img.attr('src', newSrc);
+                  }, function() {                     /* out */
+                    var label_for = $(this).attr('for')
+                    var main_checkbox = $(this).parents('form').find(':checkbox#'+label_for);
+                    var img = main_checkbox.next();
+                    var newSrc = img.attr('src').replace(/_highlighted/, '');
+                    img.attr('src', newSrc);
+                  });
                 }
               });
             }
@@ -104,7 +118,7 @@
 
         $.fn.setState = function(newState) {
           var main_checkbox = $(this);
-          main_checkbox.next().attr('src', config.imgPath + newState + '.gif');
+          main_checkbox.next().attr('src', config.imgPath + newState + '.png');
           main_checkbox.next().next().val(newState);
           $(this).trigger('stateChanged');
         }
