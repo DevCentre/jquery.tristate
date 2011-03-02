@@ -60,7 +60,7 @@
 
         this.each(function() {
             var html = '<img src="' + config.imgPath + config.initialState + '.png' + '"/>' +
-                '<input type="hidden" value="' + config.initialState + '" name="'+$(this).name'"/>';
+                '<input type="hidden" value="' + config.initialState + '" name="' + $(this).attr('name') + '"/>';
             $(this).after(html);
             $(this).hide();
 
